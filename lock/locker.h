@@ -9,9 +9,10 @@
 class sem
 {
 public:
-    // 创建并初始化信号量
+    // 构造函数：创建并初始化信号量
     sem()
     {
+        // 信号量初始化
         if (sem_init(&m_sem, 0, 0) != 0)
         {
             // 构造函数没有返回值，可以通过抛出异常来报告错误
@@ -26,7 +27,7 @@ public:
             throw std::exception();
         }
     }
-    // 销毁信号量
+    // 析构函数：销毁信号量
     ~sem()
     {
         sem_destroy(&m_sem);
@@ -101,6 +102,11 @@ public:
         pthread_cond_destroy(&m_cond);
     }
     // 等待条件变量
+    /*
+    条件变量的使用机制需要配合锁来使用
+    内部会有一次加锁和解锁
+    封装起来会使得更加简洁
+    */
     bool wait() 
     { 
         int ret = 0;
