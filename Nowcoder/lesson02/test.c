@@ -10,6 +10,18 @@ int main() {
 }
 
 /*
-预处理 -E
+源代码 .h .c .cpp
+
+预处理 -E -> .i文件
+gcc test.c -E -o test.i
+
+编译 -S
+gcc test.i -S -o test.s
+
+汇编
+gcc test.s -c
+
+链接
+gcc test.o -o test
 
 */
