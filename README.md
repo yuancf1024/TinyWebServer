@@ -1,5 +1,7 @@
 # TinyWebServer
-🔥Linux C++ lightweight Web server, refer to @qinguoyi.  
+🔥Linux C++ lightweight Web server, refer to @qinguoyi & Linux高性能服务器编程(游双).  
+
+
 
 Linux下C++轻量级Web服务器.
 
@@ -17,4 +19,14 @@ TODO
 
 ## 日志
 
-- [ ] 2022-06-22 add 线程同步机制包装类
+- [x] 2022-06-22 add 线程同步机制包装类
+
+
+## 1-线程同步机制包装类
+
+多线程同步，确保任一时刻只能有一个线程能进入关键代码段.
+
+> - 信号量
+> - 互斥锁
+> - 条件变量
+
