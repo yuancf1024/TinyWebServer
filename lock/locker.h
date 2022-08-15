@@ -63,6 +63,11 @@ public:
     { 
         pthread_mutex_destroy(&m_mutex);
     }
+
+    // 获取互斥锁
+    bool lock() { 
+        return pthread_mutex_lock(&m_mutex) == 0; 
+    }
     // 释放互斥锁
     bool unlock() 
     { 
