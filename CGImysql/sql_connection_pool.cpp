@@ -81,15 +81,40 @@ MYSQL *connection_pool::GetConnection() {
 
 // 释放当前使用的连接
 bool connection_pool::ReleaseConnection(MYSQL *con) {
+    if (NULL == con) {
+        return false;
+    }
 
+    lock.lock();
+
+    connList.push_back(con);
+    ++FreeConn;
+    --CurConn;
+
+    lock.unlock();
+
+    reserve.post();
+    return true;
 }
-
 
 // 销毁数据库连接池
-void connection_pool::DestroyPool() {
+void connection_pool::DestroyPool() { 
+    lock.lock(); 
+    if (connList.size() > 0) {
+        list<MYSQL *>::iterator it;
+        for (it = connList.begin(); it != connList.end(); ++it) {
+            MYSQL *con = *it;
+            mysql_close(con);
+        }
+        CurConn = 0;
+        FreeConn = 0;
+        connList.clear();
 
+        lock.unlock();
+    }
+
+    lock.unlock();
 }
-
 
 // 当前的空闲连接数
 int connection_pool::GetFreeConn() { 
@@ -100,3 +125,13 @@ connection_pool::~connection_pool() {
     DestroyPool(); 
 }
 
+connectionRAII::connectionRAII(MYSQL **SQL, connection_pool * connPool) {
+    *SQL = connPool->GetConnection();
+
+    conRAII = *SQL;
+    poolRAII = connPool;
+}
+
+connectionRAII::~connectionRAII() { 
+    poolRAII->ReleaseConnection(conRAII); 
+}
